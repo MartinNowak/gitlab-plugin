@@ -50,10 +50,6 @@ public class PushBuildAction implements WebHookAction {
             public void run() {
                 GitLabPushTrigger trigger = project.getTrigger(GitLabPushTrigger.class);
                 if (trigger != null) {
-                    if (trigger.getCiSkip() && isLastBuildCiSkip()) {
-                        LOGGER.log(Level.INFO, "Skipping due to ci-skip.");
-                        return;
-                    }
                     trigger.onPost(pushHook);
 
                     if (!trigger.getTriggerOpenMergeRequestOnPush().equals("never")) {
@@ -131,9 +127,5 @@ public class PushBuildAction implements WebHookAction {
         result.setTitle(mergeRequest.getTitle());
         result.setLastCommit(lastCommit);
         return result;
-    }
-
-    private boolean isLastBuildCiSkip() {
-        return !pushHook.getCommits().isEmpty() && pushHook.getCommits().get(0).getMessage().contains("[ci-skip]");
     }
 }
