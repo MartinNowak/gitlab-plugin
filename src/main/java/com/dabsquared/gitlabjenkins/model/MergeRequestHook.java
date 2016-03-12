@@ -2,18 +2,20 @@ package com.dabsquared.gitlabjenkins.model;
 
 
 import net.karneim.pojobuilder.GeneratePojoBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author Robin Müller
  */
 @GeneratePojoBuilder(intoPackage = "*.builder.generated", withFactoryMethod = "*")
 public class MergeRequestHook extends WebHook {
 
-    private User user;
-    private ObjectAttributes objectAttributes;
-    private boolean workInProgress;
-    private String url;
-    private Action action;
-    private User assignee;
+    private User user = new User();
+    private Project project = new Project();
+    private ObjectAttributes objectAttributes = new ObjectAttributes();
+    private Repository repository = new Repository();
 
     public User getUser() {
         return user;
@@ -21,6 +23,14 @@ public class MergeRequestHook extends WebHook {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public ObjectAttributes getObjectAttributes() {
@@ -31,35 +41,48 @@ public class MergeRequestHook extends WebHook {
         this.objectAttributes = objectAttributes;
     }
 
-    public boolean isWorkInProgress() {
-        return workInProgress;
+    public Repository getRepository() {
+        return repository;
     }
 
-    public void setWorkInProgress(boolean workInProgress) {
-        this.workInProgress = workInProgress;
+    public void setRepository(Repository repository) {
+        this.repository = repository;
     }
 
-    public String getUrl() {
-        return url;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MergeRequestHook that = (MergeRequestHook) o;
+        return new EqualsBuilder()
+                .append(user, that.user)
+                .append(project, that.project)
+                .append(objectAttributes, that.objectAttributes)
+                .append(repository, that.repository)
+                .isEquals();
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(user)
+                .append(project)
+                .append(objectAttributes)
+                .append(repository)
+                .toHashCode();
     }
 
-    public Action getAction() {
-        return action;
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
-    public User getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(User assignee) {
-        this.assignee = assignee;
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("user", user)
+                .append("project", project)
+                .append("objectAttributes", objectAttributes)
+                .append("repository", repository)
+                .toString();
     }
 }
